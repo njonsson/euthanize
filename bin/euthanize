@@ -1,0 +1,85 @@
+#! /usr/bin/env sh
+
+delete_least_recently_accessed_file_from() {
+  case `uname` in
+    "Darwin")
+      stat_cmd="stat -f %a%t%N"
+      cut_cmd="cut -f2-"
+      ;;
+    "Linux")
+      stat_cmd="stat --format '%X %n'"
+      cut_cmd="cut -d ' ' -f2-"
+      ;;
+    *)
+      echo "`uname` is not supported" >&2
+      exit 1
+      ;;
+  esac
+  filename=`find "$1" -type f -exec $stat_cmd "{}" \; | sort -n | head -1 | $cut_cmd`
+  result=$?
+  if [ $result != "0" ]; then
+    say "Failed to find files" >&2
+    exit 1
+  fi
+
+  say "Removing \033[4m$filename\033[0m (NOT REALLY)"
+  # rm "$filename"
+}
+
+parse_options() {
+  for argument in $*; do
+    case $argument in
+      "" | "--help" | "-h")
+        echo Deletes least-recently-used files in a directory.
+        echo
+        echo Usage:
+        echo
+        echo "$0 --size SIZE PATH"
+        echo "$0  -s    SIZE PATH"
+        echo
+        echo "   Deletes files in PATH only if PATH is estimated to exceed SIZE, which is"
+        echo "   interpreted as a number of 512-byte blocks. If SIZE is followed by a scale"
+        echo "   indicator, then it is scaled as:"
+        echo
+        echo "     k[b]  kilobytes (1024 bytes)"
+        echo "     m[b]  megabytes (1024 kilobytes)"
+        echo "     g[b]  gigabytes (1024 megabytes)"
+        echo "     t[b]  terabytes (1024 gigabytes)"
+        echo "     p[b]  petabytes (1024 terabytes)"
+        echo
+        echo "   PATH must be a directory, a symbolic link, or a regular file."
+        exit
+        ;;
+      "--size" | "-s")
+        size=$argument
+        ;;
+      *)
+        if [ "$path" = "" ]; then
+          path=$argument
+        else
+          say "More than one path specified" >&2
+          exit 1
+        fi
+        ;;
+    esac
+  done
+}
+
+say() {
+  case `uname` in
+    "Darwin")
+      echo "$@"
+      ;;
+    "Linux")
+      echo -e "$@"
+      ;;
+    *)
+      echo "`uname` is not supported" >&2
+      exit 1
+      ;;
+  esac
+}
+
+parse_options $*
+delete_least_recently_accessed_file_from $path
+exit 0
