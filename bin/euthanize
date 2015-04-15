@@ -34,8 +34,8 @@ parse_options() {
         echo
         echo Usage:
         echo
-        echo "$0 --size SIZE PATH"
-        echo "$0  -s    SIZE PATH"
+        echo "`basename $0` --size SIZE PATH"
+        echo "`basename $0`  -s    SIZE PATH"
         echo
         echo "   Deletes files in PATH only if PATH is estimated to exceed SIZE, which is"
         echo "   interpreted as a number of 512-byte blocks. If SIZE is followed by a scale"
