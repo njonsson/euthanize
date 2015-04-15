@@ -37,17 +37,17 @@ parse_options() {
         echo "`basename $0` --size SIZE PATH"
         echo "`basename $0`  -s    SIZE PATH"
         echo
-        echo "   Deletes files in PATH only if PATH is estimated to exceed SIZE, which is"
-        echo "   interpreted as a number of 512-byte blocks. If SIZE is followed by a scale"
-        echo "   indicator, then it is scaled as:"
+        echo "  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is"
+        echo "  interpreted as a number of 512-byte blocks. If SIZE is followed by a scale"
+        echo "  indicator, then it is scaled as:"
         echo
-        echo "     k[b]  kilobytes (1024 bytes)"
-        echo "     m[b]  megabytes (1024 kilobytes)"
-        echo "     g[b]  gigabytes (1024 megabytes)"
-        echo "     t[b]  terabytes (1024 gigabytes)"
-        echo "     p[b]  petabytes (1024 terabytes)"
+        echo "    k[b]  kilobytes (1024 bytes)"
+        echo "    m[b]  megabytes (1024 kilobytes)"
+        echo "    g[b]  gigabytes (1024 megabytes)"
+        echo "    t[b]  terabytes (1024 gigabytes)"
+        echo "    p[b]  petabytes (1024 terabytes)"
         echo
-        echo "   PATH must be a directory, a symbolic link, or a regular file."
+        echo "  PATH must be a directory, a symbolic link, or a regular file."
         exit
         ;;
       "--size" | "-s")
