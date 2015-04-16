@@ -2,5 +2,5 @@
 
 source test/helper
 
-assert_equal "euthanize v0.0.1" "bin/euthanize --version"
-assert_equal "euthanize v0.0.1" "bin/euthanize -v"
+assert_equal "0.0.1" "bin/euthanize --version"
+assert_equal "0.0.1" "bin/euthanize -v"

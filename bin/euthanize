@@ -54,7 +54,7 @@ parse_options() {
         size=$argument
         ;;
       "" | "--version" | "-v")
-        echo "`basename $0` v0.0.1"
+        echo "0.0.1"
         exit
         ;;
       *)
