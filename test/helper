@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+assert_equal() {
+  expected=$1
+  command=$2
+  echo -n "• $command "
+  result=`$command`
+  if [ "$result" == "$expected" ]; then
+    echo -e "\033[7;32m OK \033[0m"
+  else
+    echo -e "\033[7;31m ERROR! \033[0m expected \033[4m$expected\033[0m but got \033[4m$result\033[0m"
+    exit 1
+  fi
+}

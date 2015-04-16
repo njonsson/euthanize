@@ -53,6 +53,10 @@ parse_options() {
       "--size" | "-s")
         size=$argument
         ;;
+      "" | "--version" | "-v")
+        echo "`basename $0` v0.0.1"
+        exit
+        ;;
       *)
         if [ "$path" = "" ]; then
           path=$argument
