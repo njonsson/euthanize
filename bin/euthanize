@@ -69,19 +69,12 @@ parse_options() {
   done
 }
 
+# Display one or more strings with optional xterm escape sequences. Include "\n"
+# where desired.
 say() {
-  case `uname` in
-    "Darwin")
-      echo "$@"
-      ;;
-    "Linux")
-      echo -e "$@"
-      ;;
-    *)
-      echo "`uname` is not supported" >&2
-      exit 1
-      ;;
-  esac
+  for argument in "$@"; do
+    printf "$argument"
+  done
 }
 
 parse_options $*
