@@ -116,8 +116,8 @@ format() {
       local code=49
       ;;
     *)
-      say '-n' "$(format 'foreground_red' 'Invalid argument to format(): ')"
-      say "$(format 'underlined' $1)"
+      say '-n' "$(format 'foreground_red' "Invalid argument to ${FUNCNAME[$i]}() at ${BASH_SOURCE[$i]}:${BASH_LINENO[$i]}: ")"
+      say "$(format 'underlined' "$1")"
       exit -1
       ;;
   esac
