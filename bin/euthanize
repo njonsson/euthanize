@@ -1,6 +1,6 @@
 #! /usr/bin/env sh
 
-complain_about_invalid_options() {
+complain_about_invalid_arguments() {
   local reason="$1"
   if [ "$reason" == '' ]; then
     local reason='Invalid options'
@@ -146,23 +146,23 @@ parse_options() {
           exit
           ;;
         '')
-          complain_about_invalid_options
+          complain_about_invalid_arguments
           ;;
         *)
           if [ "$path" = '' ]; then
             path="$argument"
           else
-            complain_about_invalid_options 'More than one path specified'
+            complain_about_invalid_arguments 'More than one path argument was specified'
           fi
           ;;
       esac
     fi
   done
   if [ "$size" == '' ]; then
-    complain_about_invalid_options 'Size option is required'
+    complain_about_invalid_arguments 'Size option is required'
   fi
   if [ "$path" == '' ]; then
-    complain_about_invalid_options 'Path argument is required'
+    complain_about_invalid_arguments 'Path argument is required'
   fi
 }
 
