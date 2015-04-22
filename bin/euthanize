@@ -3,7 +3,7 @@
 complain_about_invalid_arguments() {
   local reason="$1"
   if [ "$reason" == '' ]; then
-    local reason='Invalid options'
+    local reason='One ore more arguments are invalid.'
   fi
   local reason=$(format 'foreground_red' "$reason")
   say "$reason" >&2
@@ -150,7 +150,7 @@ parse_options() {
           if [ "$path" = '' ]; then
             path="$argument"
           else
-            complain_about_invalid_arguments 'More than one path argument was specified'
+            complain_about_invalid_arguments 'More than one path argument was specified.'
           fi
           ;;
       esac
@@ -200,24 +200,24 @@ show_usage() {
 
 validate_path() {
   if [ "$path" == '' ]; then
-    complain_about_invalid_arguments 'Path argument is required'
+    complain_about_invalid_arguments 'Path argument is required.'
   fi
 
   if [ ! -d "$path" ]; then
     if [ ! -f "$path" ]; then
-      complain_about_invalid_arguments 'Path argument must be an existing directory or file'
+      complain_about_invalid_arguments 'Path argument must be an existing directory or file.'
     fi
   fi
 }
 
 validate_size() {
   if [ "$size" == '' ]; then
-    complain_about_invalid_arguments 'Size option is required'
+    complain_about_invalid_arguments 'Size option is required.'
   fi
 
   echo "$size" | grep --extended-regexp --ignore-case '^[0-9]+([kmgtp]b)?$' > /dev/null 2>&1
   if [ "$?" != '0' ]; then
-    complain_about_invalid_arguments 'Size option must be a valid size'
+    complain_about_invalid_arguments 'Size option must be a valid size.'
   fi
 }
 
