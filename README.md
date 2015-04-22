@@ -31,11 +31,11 @@ Supply a `--help` or `-h` option in order to display help.
       interpreted as a number of 512-byte blocks. If SIZE is followed by a scale
       indicator, then it is scaled as:
 
-        k[b]  kilobytes (1024 bytes)
-        m[b]  megabytes (1024 kilobytes)
-        g[b]  gigabytes (1024 megabytes)
-        t[b]  terabytes (1024 gigabytes)
-        p[b]  petabytes (1024 terabytes)
+        kb  kilobytes (1024 bytes)
+        mb  megabytes (1024 kilobytes)
+        gb  gigabytes (1024 megabytes)
+        tb  terabytes (1024 gigabytes)
+        pb  petabytes (1024 terabytes)
 
       PATH must be a directory, a symbolic link, or a regular file.
 
