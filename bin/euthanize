@@ -1,82 +1,207 @@
 #! /usr/bin/env sh
 
+complain_about_invalid_options() {
+  local reason="$1"
+  if [ "$reason" == '' ]; then
+    local reason='Invalid options'
+  fi
+  local reason=$(format 'foreground_red' "$reason")
+  say "$reason" >&2
+  say '' >&2
+  show_usage
+  exit 1
+}
+
 delete_least_recently_accessed_file_from() {
-  case `uname` in
-    "Darwin")
-      stat_cmd="stat -f %a%t%N"
-      cut_cmd="cut -f2-"
+  case "`uname`" in
+    Darwin)
+      local stat_cmd='stat -f %a%t%N'
+      local cut_cmd='cut -f2-'
       ;;
-    "Linux")
-      stat_cmd="stat --format '%X %n'"
-      cut_cmd="cut -d ' ' -f2-"
+    Linux)
+      local stat_cmd="stat --format '%X %n'"
+      local cut_cmd="cut -d ' ' -f2-"
       ;;
     *)
-      echo "`uname` is not supported" >&2
-      exit 1
+      fail "`uname` is not supported"
       ;;
   esac
-  filename=`find "$1" -type f -exec $stat_cmd "{}" \; | sort -n | head -1 | $cut_cmd`
-  result=$?
-  if [ $result != "0" ]; then
-    say "Failed to find files" >&2
-    exit 1
+  local filename=$(find "$1" -type f -exec $stat_cmd "{}" \; | sort -n | head -1 | $cut_cmd)
+  local result=$?
+  if [ "$result" != '0' ]; then
+    fail 'Failed to find files'
   fi
 
-  say "Removing \033[4m$filename\033[0m (NOT REALLY)"
+  local formatted_filename=$(format 'underlined' "$filename")
+  say "Removing $formatted_filename (NOT REALLY)"
   # rm "$filename"
 }
 
+fail() {
+  local message=$(format 'foreground_red' "$1")
+  say "$message" >&2
+  local exit_status="$2"
+  if [ "$exit_status" == '' ]; then
+    exit_status=1
+  fi
+  exit $exit_status
+}
+
+format() {
+  case "$1" in
+    'bold')
+      local code=1
+      ;;
+    'underlined')
+      local code=4
+      ;;
+    'blinking')
+      local code=5
+      ;;
+    'inverse')
+      local code=7
+      ;;
+    'foreground_black')
+      local code=30
+      ;;
+    'foreground_red')
+      local code=31
+      ;;
+    'foreground_green')
+      local code=32
+      ;;
+    'foreground_yellow')
+      local code=33
+      ;;
+    'foreground_blue')
+      local code=34
+      ;;
+    'foreground_magenta')
+      local code=35
+      ;;
+    'foreground_cyan')
+      local code=36
+      ;;
+    'foreground_gray')
+      local code=37
+      ;;
+    'foreground_default')
+      local code=39
+      ;;
+    'background_black')
+      local code=40
+      ;;
+    'background_red')
+      local code=41
+      ;;
+    'background_green')
+      local code=42
+      ;;
+    'background_yellow')
+      local code=43
+      ;;
+    'background_blue')
+      local code=44
+      ;;
+    'background_magenta')
+      local code=45
+      ;;
+    'background_cyan')
+      local code=46
+      ;;
+    'background_gray')
+      local code=47
+      ;;
+    'background_default')
+      local code=49
+      ;;
+    *)
+      say "Invalid argument to format(): $(format 'underlined' $1)"
+      exit -1
+      ;;
+  esac
+  printf "\033["$code"m$2\033[0m"
+}
+
 parse_options() {
-  for argument in $*; do
-    case $argument in
-      "" | "--help" | "-h")
-        echo Deletes least-recently-used files in a directory.
-        echo
-        echo Usage:
-        echo
-        echo "`basename $0` --size SIZE PATH"
-        echo "`basename $0`  -s    SIZE PATH"
-        echo
-        echo "  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is"
-        echo "  interpreted as a number of 512-byte blocks. If SIZE is followed by a scale"
-        echo "  indicator, then it is scaled as:"
-        echo
-        echo "    k[b]  kilobytes (1024 bytes)"
-        echo "    m[b]  megabytes (1024 kilobytes)"
-        echo "    g[b]  gigabytes (1024 megabytes)"
-        echo "    t[b]  terabytes (1024 gigabytes)"
-        echo "    p[b]  petabytes (1024 terabytes)"
-        echo
-        echo "  PATH must be a directory, a symbolic link, or a regular file."
-        exit
-        ;;
-      "--size" | "-s")
-        size=$argument
-        ;;
-      "" | "--version" | "-v")
-        echo "0.0.1"
-        exit
-        ;;
-      *)
-        if [ "$path" = "" ]; then
-          path=$argument
-        else
-          say "More than one path specified" >&2
-          exit 1
-        fi
-        ;;
-    esac
-  done
-}
-
-# Display one or more strings with optional xterm escape sequences. Include "\n"
-# where desired.
-say() {
+  local set_size=false
   for argument in "$@"; do
-    printf "$argument"
+    if [ $set_size == true ]; then
+      size="$argument"
+      local set_size=false
+    else
+      case $argument in
+        '--help' | '-h')
+          say 'Deletes least-recently-used files in a directory.'
+          say ''
+          show_usage
+          exit
+          ;;
+        '--size' | '-s')
+          local set_size=true
+          ;;
+        '--version' | '-v')
+          say '0.0.1'
+          exit
+          ;;
+        '')
+          complain_about_invalid_options
+          ;;
+        *)
+          if [ "$path" = '' ]; then
+            path="$argument"
+          else
+            complain_about_invalid_options 'More than one path specified'
+          fi
+          ;;
+      esac
+    fi
+  done
+  if [ "$size" == '' ]; then
+    complain_about_invalid_options 'Size option is required'
+  fi
+  if [ "$path" == '' ]; then
+    complain_about_invalid_options 'Path argument is required'
+  fi
+}
+
+# Display one or more strings with optional xterm escape sequences. If $1 is '-n'
+# then no trailing line feed is displayed after each of the rest of the
+# arguments.
+say() {
+  local terminator="\n"
+  local i=0
+  for argument in "$@"; do
+    local i=$((i+1))
+    if [ $i == 1 ]; then
+      if [ "$argument" == '-n' ]; then
+        local terminator=''
+        continue
+      fi
+    fi
+
+    printf "$argument""$terminator"
   done
 }
 
-parse_options $*
-delete_least_recently_accessed_file_from $path
-exit 0
+show_usage() {
+  say 'Usage:'
+  say ''
+  say "`basename $0` --size SIZE PATH"
+  say "`basename $0`  -s    SIZE PATH"
+  say ''
+  say '  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is'
+  say '  interpreted as a number of 512-byte blocks. If SIZE is followed by a scale'
+  say '  indicator, then it is scaled as:'
+  say ''
+  say '    k[b]  kilobytes (1024 bytes)'
+  say '    m[b]  megabytes (1024 kilobytes)'
+  say '    g[b]  gigabytes (1024 megabytes)'
+  say '    t[b]  terabytes (1024 gigabytes)'
+  say '    p[b]  petabytes (1024 terabytes)'
+  say ''
+  say '  PATH must be a directory, a symbolic link, or a regular file.'
+}
+
+parse_options "$@"
+delete_least_recently_accessed_file_from "$path"
