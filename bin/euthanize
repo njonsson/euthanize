@@ -161,9 +161,7 @@ parse_options() {
   if [ "$size" == '' ]; then
     complain_about_invalid_arguments 'Size option is required'
   fi
-  if [ "$path" == '' ]; then
-    complain_about_invalid_arguments 'Path argument is required'
-  fi
+  validate_path
 }
 
 # Display one or more strings with optional xterm escape sequences. If $1 is '-n'
@@ -202,6 +200,18 @@ show_usage() {
   say '    p[b]  petabytes (1024 terabytes)'
   say ''
   say '  PATH must be an existing directory or regular file.'
+}
+
+validate_path() {
+  if [ "$path" == '' ]; then
+    complain_about_invalid_arguments 'Path argument is required'
+  fi
+
+  if [ ! -d "$path" ]; then
+    if [ ! -f "$path" ]; then
+      complain_about_invalid_arguments 'Path argument must be an existing directory or file'
+    fi
+  fi
 }
 
 parse_options "$@"
