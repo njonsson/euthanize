@@ -116,7 +116,8 @@ format() {
       local code=49
       ;;
     *)
-      say "Invalid argument to format(): $(format 'underlined' $1)"
+      say '-n' "$(format 'foreground_red' 'Invalid argument to format(): ')"
+      say "$(format 'underlined' $1)"
       exit -1
       ;;
   esac
