@@ -19,7 +19,7 @@ euthanize  -s    SIZE PATH
     t[b]  terabytes (1024 gigabytes)
     p[b]  petabytes (1024 terabytes)
 
-  PATH must be a directory, a symbolic link, or a regular file.'
+  PATH must be an existing directory or regular file.'
 
 assert_equal "$HELP" "bin/euthanize --help"
 assert_equal "$HELP" "bin/euthanize -h"

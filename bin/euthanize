@@ -201,7 +201,7 @@ show_usage() {
   say '    t[b]  terabytes (1024 gigabytes)'
   say '    p[b]  petabytes (1024 terabytes)'
   say ''
-  say '  PATH must be a directory, a symbolic link, or a regular file.'
+  say '  PATH must be an existing directory or regular file.'
 }
 
 parse_options "$@"
