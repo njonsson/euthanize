@@ -1,0 +1,25 @@
+#! /usr/bin/env sh
+
+source test/helper
+
+HELP='Deletes least-recently-used files in a directory.
+
+Usage:
+
+euthanize --size SIZE PATH
+euthanize  -s    SIZE PATH
+
+  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is
+  interpreted as a number of 512-byte blocks. If SIZE is followed by a scale
+  indicator, then it is scaled as:
+
+    k[b]  kilobytes (1024 bytes)
+    m[b]  megabytes (1024 kilobytes)
+    g[b]  gigabytes (1024 megabytes)
+    t[b]  terabytes (1024 gigabytes)
+    p[b]  petabytes (1024 terabytes)
+
+  PATH must be a directory, a symbolic link, or a regular file.'
+
+assert_equal "$HELP" "bin/euthanize --help"
+assert_equal "$HELP" "bin/euthanize -h"
