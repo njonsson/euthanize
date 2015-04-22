@@ -32,8 +32,7 @@ delete_least_recently_accessed_file_from() {
     fail 'Failed to find files'
   fi
 
-  local formatted_filename=$(format 'underlined' "$filename")
-  say "Removing $formatted_filename (NOT REALLY)"
+  say "Removing $(format 'underlined' "$filename") (NOT REALLY)"
   # rm "$filename"
 }
 
@@ -131,7 +130,7 @@ parse_options() {
       size="$argument"
       local set_size=false
     else
-      case $argument in
+      case "$argument" in
         '--help' | '-h')
           say 'Deletes least-recently-used files in a directory.'
           say ''
@@ -186,8 +185,8 @@ say() {
 show_usage() {
   say 'Usage:'
   say ''
-  say "`basename $0` --size SIZE PATH"
-  say "`basename $0`  -s    SIZE PATH"
+  say "`basename "$0"` --size SIZE PATH"
+  say "`basename "$0"`  -s    SIZE PATH"
   say ''
   say '  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is'
   say '  interpreted as a number of 512-byte blocks. If SIZE is followed by a scale'
