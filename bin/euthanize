@@ -128,33 +128,34 @@ parse_options() {
     if [ $set_size == true ]; then
       size="$argument"
       local set_size=false
-    else
-      case "$argument" in
-        '--help' | '-h')
-          say 'Deletes least-recently-used files in a directory.'
-          say ''
-          show_usage
-          exit
-          ;;
-        '--size' | '-s')
-          local set_size=true
-          ;;
-        '--version' | '-v')
-          say '0.0.1'
-          exit
-          ;;
-        '')
-          complain_about_invalid_arguments
-          ;;
-        *)
-          if [ "$path" = '' ]; then
-            path="$argument"
-          else
-            complain_about_invalid_arguments 'More than one path argument was specified.'
-          fi
-          ;;
-      esac
+      continue
     fi
+
+    case "$argument" in
+      '--help' | '-h')
+        say 'Deletes least-recently-used files in a directory.'
+        say ''
+        show_usage
+        exit
+        ;;
+      '--size' | '-s')
+        local set_size=true
+        ;;
+      '--version' | '-v')
+        say '0.0.1'
+        exit
+        ;;
+      '')
+        complain_about_invalid_arguments
+        ;;
+      *)
+        if [ "$path" = '' ]; then
+          path="$argument"
+        else
+          complain_about_invalid_arguments 'More than one path argument was specified.'
+        fi
+        ;;
+    esac
   done
   validate_size
   validate_path
