@@ -1,6 +1,0 @@
-#! /usr/bin/env sh
-
-source test/helper
-
-assert_equal "0.0.1" "bin/euthanize --version"
-assert_equal "0.0.1" "bin/euthanize -v"

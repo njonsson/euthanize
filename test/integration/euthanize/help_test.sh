@@ -1,6 +1,6 @@
-#! /usr/bin/env sh
+#!/usr/bin/env sh
 
-source test/helper
+source test/helper.sh
 
 HELP='Deletes least-recently-used files in a directory.
 
@@ -21,5 +21,5 @@ euthanize  -s    SIZE PATH
 
   PATH must be an existing directory or regular file.'
 
-assert_equal "$HELP" "bin/euthanize --help"
-assert_equal "$HELP" "bin/euthanize -h"
+assert_expression_equal "$HELP" 'bin/euthanize --help'
+assert_expression_equal "$HELP" 'bin/euthanize -h'
