@@ -9,7 +9,7 @@ run_tests() {
     printf "$file\n"
 
     # Run tests, which exit upon a failed assertion.
-    source "$file"
+    source "$file" 2>&1
 
     # Run tests again to capture their output for computing statistics.
     local result=$($file 2>/dev/null)
