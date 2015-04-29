@@ -332,19 +332,13 @@ inquire() {
   shift
 
   for statement in "$@"; do
-    with_temp_file stderr_file "
-      temp_function_for_inquire() {
-        result=\$($statement)
-      }
-      temp_function_for_inquire >/dev/null 2>&1
-      local status=\$?
-      if [ \$status -ne 0 ]; then
-        say \"\$(format foreground_red no)\"
-        return \$status
-      fi
-    "
+    temp_function_for_inquire() {
+      eval "$statement"
+    }
+    result="$(temp_function_for_inquire >/dev/null 2>&1)"
     local status=$?
     if [ $status -ne 0 ]; then
+      say "$(format foreground_red no)"
       return $status
     fi
   done
@@ -378,9 +372,9 @@ perform() {
   for statement in "$@"; do
     with_temp_file stderr_file "
       temp_function_for_perform() {
-        result=\$($statement)
+        $statement
       }
-      temp_function_for_perform 2>\"\$stderr_file\"
+      result=\"\$(temp_function_for_perform 2>\"\$stderr_file\")\"
       local status=\$?
       if [ \$status -ne 0 ] || [ -s \"\$stderr_file\" ]; then
         say -n \"\$(format foreground_red 'error!')\" >&2
