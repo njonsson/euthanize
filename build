@@ -26,7 +26,7 @@ perform Building "
 
 inquire 'Package up to date?' "
   if [ -s "$BIN" ] && [ -s "$PKG" ]; then
-    diff "$PKG" "$BIN" >/dev/null
+    diff "$PKG" "$BIN"
     return \$?
   fi
 
