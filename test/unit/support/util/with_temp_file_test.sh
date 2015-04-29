@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-source test/helper.sh
 source src/support/util.sh
+source test/helper.sh
 
 with_temp_file_test() {
   local file_name_template="$(basename $0).$$"

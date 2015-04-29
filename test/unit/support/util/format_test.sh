@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-source test/helper.sh
 source src/support/util.sh
+source test/helper.sh
 
 assert_expression_equal foo 'format foo'
 
