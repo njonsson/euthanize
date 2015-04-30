@@ -80,7 +80,10 @@ assert_expression_equal() {
   local expression="$2"
   local message="$3"
   printf "$expression ... "
-  local result=$($expression 2>&1)
+  temp_function_for_assert_expression_equal() {
+    eval "$expression"
+  }
+  result="$(temp_function_for_assert_expression_equal)"
   assert_equal "$expected" "$result" "$message"
 }
 
