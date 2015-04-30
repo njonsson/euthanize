@@ -1,12 +1,14 @@
 #!/usr/bin/env sh
 
+source src/support/util.sh
+
 run_tests() {
   local file_count=0
   local assertion_count=0
   for file in $(find test -name *_test.sh); do
     local file_count=$(($file_count+1))
-    printf "________________________________________________________________________________\n"
-    printf "$file\n"
+    say "________________________________________________________________________________"
+    say "$file"
 
     # Run tests, which exit upon a failed assertion.
     source "$file" 2>&1
@@ -17,7 +19,7 @@ run_tests() {
     local lines=$(($(printf "$result\n" | wc -l)))
     local assertion_count=$(($assertion_count+$lines))
   done
-  printf "================================================================================\n"
-  printf "Approximately $assertion_count passing assertions in $file_count test files\n"
+  say "================================================================================"
+  say "Approximately $assertion_count passing assertions in $file_count test files"
 }
 run_tests
