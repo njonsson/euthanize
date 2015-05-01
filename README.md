@@ -53,6 +53,11 @@ Trim a directory _foo_ down to 1 MB in size.
 4. Push to the branch: `git push origin my-new-feature`.
 5. [Create][compare-euthanize-branches] a new pull request.
 
+Especially appreciated are patches for cross-platform compatibility. Run the
+automated tests via Make.
+
+    $ make test
+
 ## License
 
 Released under the [MIT License][MIT-License].
