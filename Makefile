@@ -20,3 +20,9 @@ test: $(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
 	rm -f $(TEST_RUN); $(SCRIPT_TEST) $(TESTS) >$(TEST_RUN) 2>&1; result=$$?; cat $(TEST_RUN); exit $$result
 
 $(TEST_RUN): $(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
+
+
+# Install
+
+install: $(MAKEFILE) test $(OUT)
+	cp -i $(OUT) /usr/local/bin/
