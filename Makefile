@@ -4,10 +4,14 @@ SCRIPT_BUILD=script/build
 SRCS=$(shell find src -name *.sh)
 
 SCRIPT_TEST=script/run-tests
+TEST_RELATED=$(shell find test -name *.sh)
 TESTS=$(shell find test -name *_test.sh)
+TEST_RUN=.test-run
 
 $(OUT): $(MAKEFILE) $(SCRIPT_BUILD) $(SRCS)
 	$(SCRIPT_BUILD) $(OUT) $(SRCS)
 
-test: $(MAKEFILE) $(SCRIPT_TEST) $(TESTS) $(SRCS) $(OUT)
-	$(SCRIPT_TEST) $(TESTS)
+test: $(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
+	rm -f $(TEST_RUN); $(SCRIPT_TEST) $(TESTS) >$(TEST_RUN) 2>&1; result=$$?; cat $(TEST_RUN); exit $$result
+
+$(TEST_RUN): $(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
