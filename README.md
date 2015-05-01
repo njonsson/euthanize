@@ -12,13 +12,10 @@ noncritical data (such as personal download folders) to a manageable size.
 
 ## Installation
 
-Be sure that _euthanize_ supports your operating system by running the automated
-tests.
+Use Make to install _euthanize_. This automated method first runs a suite of
+tests in order to determine whether your operating system is supported.
 
-    $ make test
-
-If all is well, copy _euthanize_ to a place where you can execute it (somewhere
-in your `$PATH`, such as _/usr/local/bin/_ or _~/bin/_).
+    $ make install
 
 ## Usage
 
