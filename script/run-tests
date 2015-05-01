@@ -1,17 +1,18 @@
 #!/usr/bin/env sh
 
-source src/support/util.sh
-
 run_tests() {
+  if [ $# -lt 1 ]; then
+    printf "\033[31m$# for 1-n arguments passed to $0\033[0m\n" >&2
+    exit 1
+  fi
+
   local file_count=0
   local assertion_count=0
-  for file in $(find test -name *_test.sh); do
+  for file in "$@"; do
     local file_count=$(($file_count+1))
-    say "________________________________________________________________________________"
-    say "$file"
 
     # Run tests, which exit upon a failed assertion.
-    source "$file" 2>&1
+    source "$file" >/dev/null
 
     # Run tests again to capture their output for computing statistics.
     local result=$($file 2>/dev/null)
@@ -19,7 +20,6 @@ run_tests() {
     local lines=$(($(printf "$result\n" | wc -l)))
     local assertion_count=$(($assertion_count+$lines))
   done
-  say "================================================================================"
-  say "Approximately $assertion_count passing assertions in $file_count test files"
+  printf "Approximately $assertion_count passing assertions in $file_count test files\n"
 }
-run_tests
+run_tests "$@"

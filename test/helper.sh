@@ -66,8 +66,11 @@ assert_equal() {
   local expected="$1"
   local actual="$2"
   local message="$3"
+  if [ "$message" == '' ]; then
+    local message="expected \"$expected\" but got \"$actual\""
+  fi
   are_equal "$expected" "$actual"
-  assert $? "expected \"$expected\" but got \"$actual\"" "$message"
+  assert $? "$message"
 }
 
 assert_expression_equal() {
@@ -136,9 +139,9 @@ deny_expression_equal() {
 fail() {
   local message="$1"
   if [ "$message" != '' ]; then
-    message=" $message"
+    message=" -- $message"
   fi
-  printf "\033[31mFAIL\033[0m$message\n"
+  printf "\033[31mFAIL\033[0m at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]} -> ${BASH_SOURCE[3]}:${BASH_LINENO[2]} -> ${BASH_SOURCE[4]}:${BASH_LINENO[3]}$message\n" >&2
   exit 1
 }
 
