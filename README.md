@@ -12,8 +12,8 @@ noncritical data (such as personal download folders) to a manageable size.
 
 ## Installation
 
-Copy _bin/euthanize_ to a place where you can execute it (somewhere in your
-`$PATH`, such as _/usr/local/bin/_ or _~/bin/_).
+Run Make (`make`), and then copy _euthanize_ to a place where you can execute it
+(somewhere in your `$PATH`, such as _/usr/local/bin/_ or _~/bin/_).
 
 ## Usage
 

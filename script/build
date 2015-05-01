@@ -6,19 +6,19 @@ build() {
     exit 1
   fi
 
-  local BIN="$1"
+  local OUT="$1"
   shift
 
-  printf "#!/usr/bin/env sh\n" >"$BIN"
+  printf "#!/usr/bin/env sh\n" >"$OUT"
   for file in "$@"; do
-    printf "\n" >>"$BIN"
-    printf "#--------------------------------------------------------------------------------\n" >>"$BIN"
-    printf "# $file\n" >>"$BIN"
-    cat "$file" >>"$BIN"
+    printf "\n" >>"$OUT"
+    printf "#--------------------------------------------------------------------------------\n" >>"$OUT"
+    printf "# $file\n" >>"$OUT"
+    cat "$file" >>"$OUT"
   done
-  printf "\n" >>"$BIN"
-  printf "#--------------------------------------------------------------------------------\n" >>"$BIN"
-  printf "main \"\$@\"\n" >>"$BIN"
-  chmod a+x "$BIN"
+  printf "\n" >>"$OUT"
+  printf "#--------------------------------------------------------------------------------\n" >>"$OUT"
+  printf "main \"\$@\"\n" >>"$OUT"
+  chmod a+x "$OUT"
 }
 build "$@"

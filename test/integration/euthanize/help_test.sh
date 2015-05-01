@@ -21,5 +21,5 @@ euthanize  -s    SIZE PATH
 
   PATH must be an existing directory or regular file.'
 
-assert_expression_equal "$HELP" 'bin/euthanize --help'
-assert_expression_equal "$HELP" 'bin/euthanize -h'
+assert_expression_equal "$HELP" './euthanize --help'
+assert_expression_equal "$HELP" './euthanize -h'
