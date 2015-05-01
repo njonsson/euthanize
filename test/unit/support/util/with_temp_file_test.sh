@@ -20,8 +20,10 @@ with_temp_file_test() {
     exit $status
   fi
 
+  source_executed=false
   file_exists=false
   with_temp_file my_temp_file "
+    source_executed=true
     if [ -f \"\$my_temp_file\" ]; then
       file_exists=true
     fi
@@ -41,15 +43,15 @@ with_temp_file_test() {
   local stderr=$(cat "$stderr_file")
   rm -f "$stderr_file" >/dev/null 2>&1
 
-  assert "$file_exists" 'Temporary file was never created or source was not executed'
+  assert "$source_executed" 'Source was not executed as expected'
+  assert "$file_exists" 'Temporary file was not created as expected'
   assert_equal 123 $status 'Status was not passed as expected'
   assert_equal 'Written to stdout' "$stdout" 'stdout was not written as expected'
   assert_equal 'Written to stderr' "$stderr" 'stderr was not written as expected'
   if [ -f "$my_temp_file" ]; then
-    fail "Temporary file $my_temp_file was not deleted"
+    fail "Temporary file $my_temp_file was not deleted as expected"
   else
     pass
   fi
 }
-
 with_temp_file_test
