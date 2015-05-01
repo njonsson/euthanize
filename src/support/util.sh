@@ -297,7 +297,7 @@ with_temp_file() {
     exit -1
   fi
 
-  local file_name_template="$(basename $0).$$"
+  local file_name_template="$(basename $0).$$.XXX"
   local file_name=$(mktemp -t "$file_name_template")
   local status=$?
   if [ $status -ne 0 ]; then

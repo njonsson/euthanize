@@ -4,7 +4,7 @@ source src/support/util.sh
 source test/helper.sh
 
 with_temp_file_test() {
-  local file_name_template="$(basename $0).$$"
+  local file_name_template="$(basename $0).$$.XXX"
 
   local stdout_file=$(mktemp -t "$file_name_template")
   local status=$?

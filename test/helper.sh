@@ -11,7 +11,7 @@ are_equal() {
   local expected="$1"
   local actual="$2"
 
-  local file_name_template="$(basename $0).$$"
+  local file_name_template="$(basename $0).$$.XXX"
 
   local expected_file=$(mktemp -t "$file_name_template")
   local status=$?
