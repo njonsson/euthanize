@@ -6,6 +6,7 @@ run_tests() {
     exit 1
   fi
 
+  local started_at=$(($(date '+%s')))
   local file_count=0
   local assertion_count=0
   for file in "$@"; do
@@ -20,6 +21,16 @@ run_tests() {
     local lines=$(($(printf "$result\n" | wc -l)))
     local assertion_count=$(($assertion_count+$lines))
   done
-  printf "Approximately $assertion_count passing assertions in $file_count test files\n"
+  local duration=$(($(date '+%s')-$started_at))
+  printf "* Approximately $assertion_count passing assertions\n"
+  printf "* In $file_count test files\n"
+  printf "* Completed $(date '+%a') "
+  printf $(($(date '+%m')))
+  printf $(date '+/%d')
+  printf ' '
+  printf $(date '+%l:%M:%S')
+  printf ' '
+  printf "$(date '+%p %Z')\n"
+  printf "* In approximately $duration seconds\n"
 }
 run_tests "$@"
