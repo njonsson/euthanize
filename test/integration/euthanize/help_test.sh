@@ -22,7 +22,12 @@ euthanize  -s    SIZE PATH
 
   PATH must be an existing directory or regular file.'
 
-  assert_expression_equal "$HELP" './euthanize --help'
-  assert_expression_equal "$HELP" './euthanize -h'
+  local command='./euthanize --help'
+  assert_output_equal "$HELP" "$command"
+  assert_exit_status_equal 0 "$command"
+
+  local command='./euthanize -h'
+  assert_output_equal "$HELP" "$command"
+  assert_exit_status_equal 0 "$command"
 }
 help_test

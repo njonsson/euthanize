@@ -72,7 +72,7 @@ assert_equal() {
   assert $? "$message"
 }
 
-assert_expression_equal() {
+assert_exit_status_equal() {
   if [ $# -lt 2 ]; then
     printf "\033[31m$# for 2-3 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
     exit -1
@@ -82,10 +82,27 @@ assert_expression_equal() {
   local expression="$2"
   local message="$3"
   printf "$expression ... "
-  temp_function_for_assert_expression_equal() {
+  temp_function_for_assert_exit_status_equal() {
+    eval "$expression" &>/dev/null
+  }
+  temp_function_for_assert_exit_status_equal
+  assert_equal "$expected" "$?" "$message"
+}
+
+assert_output_equal() {
+  if [ $# -lt 2 ]; then
+    printf "\033[31m$# for 2-3 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
+    exit -1
+  fi
+
+  local expected="$1"
+  local expression="$2"
+  local message="$3"
+  printf "$expression ... "
+  temp_function_for_assert_output_equal() {
     eval "$expression" 2>&1
   }
-  result="$(temp_function_for_assert_expression_equal)"
+  result="$(temp_function_for_assert_output_equal)"
   assert_equal "$expected" "$result" "$message"
 }
 
@@ -121,7 +138,24 @@ deny_equal() {
   deny $? "did not expect \"$unexpected\"" "$message"
 }
 
-deny_expression_equal() {
+deny_exit_status_equal() {
+  if [ $# -lt 2 ]; then
+    printf "\033[31m$# for 2-3 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
+    exit -1
+  fi
+
+  local expected="$1"
+  local expression="$2"
+  local message="$3"
+  printf "$expression ... "
+  temp_function_for_deny_exit_status_equal() {
+    eval "$expression" &>/dev/null
+  }
+  temp_function_for_deny_exit_status_equal
+  deny_equal "$expected" "$?" "$message"
+}
+
+deny_output_equal() {
   if [ $# -lt 2 ]; then
     printf "\033[31m$# for 2-3 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
     exit -1
@@ -131,10 +165,10 @@ deny_expression_equal() {
   local expression="$2"
   local message="$3"
   printf "$expression ... "
-  temp_function_for_deny_expression_equal() {
+  temp_function_for_deny_output_equal() {
     eval "$expression" 2>&1
   }
-  result="$(temp_function_for_deny_expression_equal)"
+  result="$(temp_function_for_deny_output_equal)"
   deny_equal "$unexpected" "$result" "$message"
 }
 
