@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-source src/support/util.sh
+source src/support.sh
 source test/helper.sh
 
 format_test() {
