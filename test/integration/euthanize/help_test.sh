@@ -2,7 +2,8 @@
 
 source test/helper.sh
 
-HELP='Deletes least-recently-used files in a directory.
+function help_test() {
+  local HELP='Deletes least-recently-used files in a directory.
 
 Usage:
 
@@ -21,5 +22,7 @@ euthanize  -s    SIZE PATH
 
   PATH must be an existing directory or regular file.'
 
-assert_expression_equal "$HELP" './euthanize --help'
-assert_expression_equal "$HELP" './euthanize -h'
+  assert_expression_equal "$HELP" './euthanize --help'
+  assert_expression_equal "$HELP" './euthanize -h'
+}
+help_test

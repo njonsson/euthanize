@@ -2,5 +2,10 @@
 
 source test/helper.sh
 
-assert_expression_equal '0.0.1' './euthanize --version'
-assert_expression_equal '0.0.1' './euthanize -v'
+version_test() {
+  local VERSION=0.0.1
+
+  assert_expression_equal $VERSION './euthanize --version'
+  assert_expression_equal $VERSION './euthanize -v'
+}
+version_test
