@@ -12,7 +12,7 @@ $(OUT): $(MAKEFILE) $(SCRIPT_BUILD) $(SRCS)
 # Test
 
 SCRIPT_TEST=script/run-tests
-TEST_RELATED=$(shell find test -name *.sh)
+TEST_RELATED=$(shell find test -name *.sh -and -not -name *_test.sh)
 TESTS=$(shell find test -name *_test.sh)
 TEST_RUN=.test-run
 ALL_TEST_DEPENDENCIES=$(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
