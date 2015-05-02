@@ -18,7 +18,11 @@ run_tests() {
     # Run tests again to capture their output for computing statistics.
     local result=$($file 2>/dev/null)
 
-    local lines=$(($(printf "$result\n" | wc -l)))
+    if [ "$result" == '' ]; then
+      local lines=0
+    else
+      local lines=$(($(printf "$result\n" | wc -l)))
+    fi
     local assertion_count=$(($assertion_count+$lines))
   done
   local duration=$(($(date '+%s')-$started_at))
