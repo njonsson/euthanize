@@ -20,6 +20,7 @@ test: $(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
 	rm -f $(TEST_RUN); $(SCRIPT_TEST) $(TESTS) >$(TEST_RUN) 2>&1; result=$$?; cat $(TEST_RUN); exit $$result
 
 $(TEST_RUN): $(MAKEFILE) $(SCRIPT_TEST) $(TEST_RELATED) $(TESTS) $(SRCS) $(OUT)
+	exit 1
 
 
 # Install
