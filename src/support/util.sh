@@ -319,6 +319,6 @@ with_temp_file() {
       break
     fi
   done
-  rm -f "$file_name" >/dev/null 2>&1
+  rm -f "$file_name" &>/dev/null
   return $status
 }

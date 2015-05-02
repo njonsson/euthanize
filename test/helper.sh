@@ -29,11 +29,10 @@ are_equal() {
   fi
   printf "$actual" >"$actual_file"
 
-  diff "$expected_file" "$actual_file" >/dev/null 2>&1
+  diff "$expected_file" "$actual_file" &>/dev/null
   diff_status=$?
 
-  rm -f "$expected_file" >/dev/null 2>&1
-  rm -f "$actual_file" >/dev/null 2>&1
+  rm -f "$expected_file" "$actual_file" &>/dev/null
 
   return $diff_status
 }

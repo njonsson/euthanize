@@ -39,9 +39,9 @@ with_temp_file_test() {
   " >"$stdout_file" 2>"$stderr_file"
   local status=$?
   local stdout=$(cat "$stdout_file")
-  rm -f "$stdout_file" >/dev/null 2>&1
+  rm -f "$stdout_file" &>/dev/null
   local stderr=$(cat "$stderr_file")
-  rm -f "$stderr_file" >/dev/null 2>&1
+  rm -f "$stderr_file" &>/dev/null
 
   assert "$source_executed" 'Source was not executed as expected'
   assert "$file_exists" 'Temporary file was not created as expected'

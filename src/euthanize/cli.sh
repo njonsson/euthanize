@@ -86,7 +86,7 @@ validate_size() {
     complain_about_invalid_arguments 'Size option is required.'
   fi
 
-  printf "$size" | grep --extended-regexp --ignore-case '^[0-9]+([kmgtp]b)?$' >/dev/null 2>&1
+  printf "$size" | grep --extended-regexp --ignore-case '^[0-9]+([kmgtp]b)?$' &>/dev/null
   if [ $? -ne 0 ]; then
     complain_about_invalid_arguments 'Size option must be a valid size.'
   fi
