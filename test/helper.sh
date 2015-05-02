@@ -84,7 +84,7 @@ assert_expression_equal() {
   local message="$3"
   printf "$expression ... "
   temp_function_for_assert_expression_equal() {
-    eval "$expression"
+    eval "$expression" 2>&1
   }
   result="$(temp_function_for_assert_expression_equal)"
   assert_equal "$expected" "$result" "$message"
@@ -132,7 +132,10 @@ deny_expression_equal() {
   local expression="$2"
   local message="$3"
   printf "$expression ... "
-  local result=$($expression 2>&1)
+  temp_function_for_deny_expression_equal() {
+    eval "$expression" 2>&1
+  }
+  result="$(temp_function_for_deny_expression_equal)"
   deny_equal "$unexpected" "$result" "$message"
 }
 
