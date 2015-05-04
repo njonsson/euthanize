@@ -2,7 +2,7 @@
 
 source test/helper.sh
 
-function help_test() {
+help_test() {
   local HELP='Deletes least-recently-used files in a directory.
 
 Usage:
