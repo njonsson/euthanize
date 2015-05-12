@@ -25,6 +25,7 @@ delete_least_recently_accessed_file_from() {
 
 # The program's entry point.
 main() {
+  set -o pipefail
   parse_options "$@"
   delete_least_recently_accessed_file_from "$path"
 }
