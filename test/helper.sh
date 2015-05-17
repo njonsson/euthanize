@@ -97,6 +97,25 @@ assert_exit_status_equal() {
   assert_equal "$expected" "$?" "$message"
 }
 
+assert_file_exists() {
+  if [ $# -lt 1 ]; then
+    printf "\033[31m$# for 1-2 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
+    exit -1
+  fi
+
+  local path="$1"
+  local message="$2"
+  if [ "$message" == '' ]; then
+    message="file \`$path' does not exist"
+  fi
+  printf "$path exists ... "
+  if [ -f "$path" ]; then
+    pass
+  else
+    fail "$message"
+  fi
+}
+
 assert_output_equal() {
   if [ $# -lt 2 ]; then
     printf "\033[31m$# for 2-3 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
@@ -112,6 +131,25 @@ assert_output_equal() {
   }
   result="$(temp_function_for_assert_output_equal)"
   assert_equal "$expected" "$result" "$message"
+}
+
+content_of_size() {
+  if [ $# -lt 1 ]; then
+    printf "\033[31m$# for 1 argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
+    exit -1
+  fi
+
+  local size=$(($1))
+  if [ "$size" -lt 0 ]; then
+    printf "\033[31millegal negative size argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
+    exit -1
+  fi
+
+  if [ "$size" -gt 0 ]; then
+    for i in $(seq $size); do
+      printf x
+    done
+  fi
 }
 
 deny() {
