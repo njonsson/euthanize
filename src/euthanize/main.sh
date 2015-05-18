@@ -14,8 +14,14 @@ delete_least_recently_accessed_file_from() {
       fail "`uname` is not supported"
       ;;
   esac
-  local filename=$(find "$1" -type f -exec $stat_cmd "{}" \; | sort -n | head -1 | $cut_cmd)
-  if [ $? -ne 0 ]; then
+
+  # Using `local` always sets `$?` to 0, so work around that.
+  _filename=$(find "$1" -type f -exec $stat_cmd "{}" \; | sort -n | head -1 | $cut_cmd)
+  local status=$?
+  local filename="$_filename"
+  unset _filename
+
+  if [ $status -ne 0 ]; then
     fail 'Failed to find files'
   fi
 

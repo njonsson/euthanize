@@ -13,16 +13,24 @@ are_equal() {
 
   local file_name_template="$(basename $0).$$.XXX"
 
-  local expected_file=$(mktemp -t "$file_name_template")
+  # Using `local` always sets `$?` to 0, so work around that.
+  _expected_file=$(mktemp -t "$file_name_template")
   local status=$?
+  local expected_file="$_expected_file"
+  unset _expected_file
+
   if [ $status -ne 0 ]; then
     printf "\033[31mFailed to create temporary file\033[0m"
     exit $status
   fi
   printf "$expected" >"$expected_file"
 
-  local actual_file=$(mktemp -t "$file_name_template")
+  # Using `local` always sets `$?` to 0, so work around that.
+  _actual_file=$(mktemp -t "$file_name_template")
   local status=$?
+  local actual_file="$_actual_file"
+  unset _actual_file
+
   if [ $status -ne 0 ]; then
     printf "\033[31mFailed to create temporary file\033[0m"
     exit $status
