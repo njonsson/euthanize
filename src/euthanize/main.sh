@@ -1,6 +1,6 @@
 # Principal functions of the program.
 
-compute_size_of_path() {
+compute_size() {
   local path="$1"
   case "`uname`" in
     Darwin)
@@ -52,17 +52,17 @@ main() {
   parse_options "$@"
 
   # Using `local` always sets `$?` to 0, so work around that.
-  _size_of_path=$(($(compute_size_of_path "$path")))
+  _actual_size=$(($(compute_size "$path")))
   local status=$?
-  local size_of_path="$_size_of_path"
-  unset _size_of_path
+  local actual_size="$_actual_size"
+  unset _actual_size
 
   if [ $status -ne 0 ]; then
     say "Failed to compute the size of \`$path'."
     exit 1
   fi
 
-  if [ "$size_of_path" -le "$size" ]; then
+  if [ "$actual_size" -le "$size" ]; then
     say 'Nothing to do.'
     exit 0
   fi
