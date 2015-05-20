@@ -33,7 +33,7 @@ fail() {
 
   local exit_status=1
   if [ $# -gt 0 ]; then
-    local exit_status=$1
+    local exit_status="$1"
   fi
 
   local formatted_message=$(format foreground_red "$message")
