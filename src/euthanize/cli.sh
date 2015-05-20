@@ -38,7 +38,7 @@ parse_options() {
         complain_about_invalid_arguments
         ;;
       *)
-        if [ "$path" = '' ]; then
+        if [ "$path" == '' ]; then
           path="$argument"
         else
           complain_about_invalid_arguments 'More than one path argument was specified.'
