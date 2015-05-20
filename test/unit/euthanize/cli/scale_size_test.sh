@@ -47,10 +47,12 @@ scale_size_test() {
   deny_output_equal 'Size option must be a valid size' "$expression"
 
   local expression='scale_size "123zb"'
-  deny_output_equal 'Size option must be a valid size' "$expression"
+  assert_output_equal 'Size option is out of range' "$expression"
+  assert_exit_status_equal 1 "$expression"
 
   local expression='scale_size "123yb"'
-  deny_output_equal 'Size option must be a valid size' "$expression"
+  assert_output_equal 'Size option is out of range' "$expression"
+  assert_exit_status_equal 1 "$expression"
 
 
   local expression='scale_size 123kib'
@@ -76,9 +78,11 @@ scale_size_test() {
   deny_output_equal 'Size option must be a valid size' "$expression"
 
   local expression='scale_size "123zib"'
-  deny_output_equal 'Size option must be a valid size' "$expression"
+  assert_output_equal 'Size option is out of range' "$expression"
+  assert_exit_status_equal 1 "$expression"
 
   local expression='scale_size "123yib"'
-  deny_output_equal 'Size option must be a valid size' "$expression"
+  assert_output_equal 'Size option is out of range' "$expression"
+  assert_exit_status_equal 1 "$expression"
 }
 scale_size_test

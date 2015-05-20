@@ -50,6 +50,29 @@ parse_options() {
   validate_path
 }
 
+safely_multiply() {
+  if [ $# -lt 2 ]; then
+    local message="$# for 2-n arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}"
+    local formatted_message=$(format foreground_red "$message")
+    say "$formatted_message" >&2
+    exit -1
+  fi
+
+  local result="$1"
+  shift
+  for argument in "$@"; do
+    local product=$((result*argument))
+    local reverted="$((product/argument))"
+    if [ "$reverted" == "$result" ]; then
+      local result="$product"
+    else
+      say 'Overflow'
+      return 1
+    fi
+  done
+  say "$result"
+}
+
 scale_size() {
   if [ $# -ne 1 ]; then
     local message="$# for 1 argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}"
@@ -84,52 +107,52 @@ scale_size() {
   local size=$(printf "$size" | grep --extended-regexp --ignore-case --only-match '^\d+')
   case "$scale" in
     kb)
-      local size=$((size*1000))
+      local size=$(safely_multiply "$size" 1000)
       ;;
     mb)
-      local size=$((size*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000)
       ;;
     gb)
-      local size=$((size*1000*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000 1000)
       ;;
     tb)
-      local size=$((size*1000*1000*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000 1000 1000)
       ;;
     pb)
-      local size=$((size*1000*1000*1000*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000 1000 1000 1000)
       ;;
     eb)
-      local size=$((size*1000*1000*1000*1000*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000 1000 1000 1000 1000)
       ;;
     zb)
-      local size=$((size*1000*1000*1000*1000*1000*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000 1000 1000 1000 1000 1000)
       ;;
     yb)
-      local size=$((size*1000*1000*1000*1000*1000*1000*1000*1000))
+      local size=$(safely_multiply "$size" 1000 1000 1000 1000 1000 1000 1000 1000)
       ;;
     kib)
-      local size=$((size*1024))
+      local size=$(safely_multiply "$size" 1024)
       ;;
     mib)
-      local size=$((size*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024)
       ;;
     gib)
-      local size=$((size*1024*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024 1024)
       ;;
     tib)
-      local size=$((size*1024*1024*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024 1024 1024)
       ;;
     pib)
-      local size=$((size*1024*1024*1024*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024 1024 1024 1024)
       ;;
     eib)
-      local size=$((size*1024*1024*1024*1024*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024 1024 1024 1024 1024)
       ;;
     zib)
-      local size=$((size*1024*1024*1024*1024*1024*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024 1024 1024 1024 1024 1024)
       ;;
     yib)
-      local size=$((size*1024*1024*1024*1024*1024*1024*1024*1024))
+      local size=$(safely_multiply "$size" 1024 1024 1024 1024 1024 1024 1024 1024)
       ;;
     *)
       say 'Size option must be a valid size'
