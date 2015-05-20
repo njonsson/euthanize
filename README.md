@@ -30,14 +30,26 @@ Supply a `--help` or `-h` option in order to display help.
     euthanize  -s    SIZE PATH
 
       Deletes files in PATH only if PATH is estimated to exceed SIZE, which is
-      interpreted as a number of 512-byte blocks. If SIZE is followed by a scale
-      indicator, then it is scaled as:
+      interpreted as a number of bytes. If SIZE includes a scale indicator, then
+      it is scaled as:
 
-        kb  kilobytes (1024 bytes)
-        mb  megabytes (1024 kilobytes)
-        gb  gigabytes (1024 megabytes)
-        tb  terabytes (1024 gigabytes)
-        pb  petabytes (1024 terabytes)
+        kb   kilobytes (1000 bytes)
+        mb   megabytes (1000 kilobytes)
+        gb   gigabytes (1000 megabytes)
+        tb   terabytes (1000 gigabytes)
+        pb   petabytes (1000 terabytes)
+        eb   exabytes (1000 petabytes)
+        zb   zettabytes (1000 exabytes)
+        yb   yottabytes (1000 zettabytes)
+
+        kib  kibibytes (1024 bytes)
+        mib  mebibytes (1024 kibibytes)
+        gib  gibibytes (1024 mebibytes)
+        tib  tebibytes (1024 gibibytes)
+        pib  pebibytes (1024 tebibytes)
+        eib  exbibytes (1024 pebibytes)
+        zib  zebibytes (1024 exbibytes)
+        yib  yobibytes (1024 zebibytes)
 
       PATH must be a directory, a symbolic link, or a regular file.
 

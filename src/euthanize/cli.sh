@@ -50,6 +50,101 @@ parse_options() {
   validate_path
 }
 
+scale_size() {
+  if [ $# -ne 1 ]; then
+    local message="$# for 1 argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}"
+    local formatted_message=$(format foreground_red "$message")
+    say "$formatted_message" >&2
+    exit -1
+  fi
+
+  local size="$1"
+  if [ "$size" == '' ]; then
+    say 'Size option is required'
+    return 1
+  fi
+
+  printf "$size" | grep --extended-regexp '^\d+$' &>/dev/null
+  if [ $? -eq 0 ]; then
+    say "$size"
+    return 0
+  fi
+
+  # Using `local` always sets `$?` to 0, so work around that.
+  _scale=$(printf "$size" | grep --extended-regexp --ignore-case --only-match '[kmgtpezy]i?b$' | tr '[:upper:]' '[:lower:]')
+  local status=$?
+  local scale="$_scale"
+  unset _scale
+
+  if [ $status -ne 0 ]; then
+    say 'Size option must be a valid size'
+    return 1
+  fi
+
+  local size=$(printf "$size" | grep --extended-regexp --ignore-case --only-match '^\d+')
+  case "$scale" in
+    kb)
+      local size=$((size*1000))
+      ;;
+    mb)
+      local size=$((size*1000*1000))
+      ;;
+    gb)
+      local size=$((size*1000*1000*1000))
+      ;;
+    tb)
+      local size=$((size*1000*1000*1000*1000))
+      ;;
+    pb)
+      local size=$((size*1000*1000*1000*1000*1000))
+      ;;
+    eb)
+      local size=$((size*1000*1000*1000*1000*1000*1000))
+      ;;
+    zb)
+      local size=$((size*1000*1000*1000*1000*1000*1000*1000))
+      ;;
+    yb)
+      local size=$((size*1000*1000*1000*1000*1000*1000*1000*1000))
+      ;;
+    kib)
+      local size=$((size*1024))
+      ;;
+    mib)
+      local size=$((size*1024*1024))
+      ;;
+    gib)
+      local size=$((size*1024*1024*1024))
+      ;;
+    tib)
+      local size=$((size*1024*1024*1024*1024))
+      ;;
+    pib)
+      local size=$((size*1024*1024*1024*1024*1024))
+      ;;
+    eib)
+      local size=$((size*1024*1024*1024*1024*1024*1024))
+      ;;
+    zib)
+      local size=$((size*1024*1024*1024*1024*1024*1024*1024))
+      ;;
+    yib)
+      local size=$((size*1024*1024*1024*1024*1024*1024*1024*1024))
+      ;;
+    *)
+      say 'Size option must be a valid size'
+      return 1
+      ;;
+  esac
+  printf "$size" | grep --extended-regexp '^\d+$' &>/dev/null
+  if [ $? -ne 0 ]; then
+    say 'Size option is out of range'
+    return 1
+  fi
+
+  say "$size"
+}
+
 show_usage() {
   say 'Usage:'
   say ''
@@ -57,14 +152,26 @@ show_usage() {
   say "`basename "$0"`  -s    SIZE PATH"
   say ''
   say '  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is'
-  say '  interpreted as a number of 512-byte blocks. If SIZE is followed by a scale'
-  say '  indicator, then it is scaled as:'
+  say '  interpreted as a number of bytes. If SIZE includes a scale indicator, then it'
+  say '  is scaled as:'
   say ''
-  say '    kb  kilobytes (1024 bytes)'
-  say '    mb  megabytes (1024 kilobytes)'
-  say '    gb  gigabytes (1024 megabytes)'
-  say '    tb  terabytes (1024 gigabytes)'
-  say '    pb  petabytes (1024 terabytes)'
+  say '    kb   kilobytes (1000 bytes)'
+  say '    mb   megabytes (1000 kilobytes)'
+  say '    gb   gigabytes (1000 megabytes)'
+  say '    tb   terabytes (1000 gigabytes)'
+  say '    pb   petabytes (1000 terabytes)'
+  say '    eb   exabytes (1000 petabytes)'
+  say '    zb   zettabytes (1000 exabytes)'
+  say '    yb   yottabytes (1000 zettabytes)'
+  say ''
+  say '    kib  kibibytes (1024 bytes)'
+  say '    mib  mebibytes (1024 kibibytes)'
+  say '    gib  gibibytes (1024 mebibytes)'
+  say '    tib  tebibytes (1024 gibibytes)'
+  say '    pib  pebibytes (1024 tebibytes)'
+  say '    eib  exbibytes (1024 pebibytes)'
+  say '    zib  zebibytes (1024 exbibytes)'
+  say '    yib  yobibytes (1024 zebibytes)'
   say ''
   say '  PATH must be an existing directory or regular file.'
 }
@@ -82,12 +189,15 @@ validate_path() {
 }
 
 validate_size() {
-  if [ "$size" == '' ]; then
-    complain_about_invalid_arguments 'Size option is required.'
+  # Using `local` always sets `$?` to 0, so work around that.
+  _result=$(scale_size "$size")
+  local status=$?
+  local result="$_result"
+  unset _result
+
+  if [ $status -ne 0 ]; then
+    complain_about_invalid_arguments "$result."
   fi
 
-  printf "$size" | grep --extended-regexp --ignore-case '^[0-9]+([kmgtp]b)?$' &>/dev/null
-  if [ $? -ne 0 ]; then
-    complain_about_invalid_arguments 'Size option must be a valid size.'
-  fi
+  size=$result
 }
