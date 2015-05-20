@@ -3,7 +3,7 @@
 run_tests() {
   if [ $# -lt 1 ]; then
     printf "\033[31m$# for 1-n arguments passed to $0\033[0m\n" >&2
-    exit 1
+    exit -1
   fi
 
   local started_at=$(($(date '+%s')))
