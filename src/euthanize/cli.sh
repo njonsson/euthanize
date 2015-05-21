@@ -91,7 +91,7 @@ scale_size() {
     return 1
   fi
 
-  printf "$size" | grep --extended-regexp '^\d+$' &>/dev/null
+  printf "$size" | grep --extended-regexp '^[0-9]+$' &>/dev/null
   if [ $? -eq 0 ]; then
     say "$size"
     return 0
@@ -108,7 +108,7 @@ scale_size() {
     return 1
   fi
 
-  local size=$(printf "$size" | grep --extended-regexp --ignore-case --only-match '^\d+')
+  local size=$(printf "$size" | grep --extended-regexp --ignore-case --only-match '^[0-9]+')
   case "$scale" in
     kb)
       local size=$(safely_multiply "$size" 1000)
@@ -163,7 +163,7 @@ scale_size() {
       return 1
       ;;
   esac
-  printf "$size" | grep --extended-regexp '^\d+$' &>/dev/null
+  printf "$size" | grep --extended-regexp '^[0-9]+$' &>/dev/null
   if [ $? -ne 0 ]; then
     say 'Size option is out of range'
     return 1
