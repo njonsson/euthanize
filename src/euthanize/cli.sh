@@ -91,7 +91,7 @@ scale_size() {
     return 1
   fi
 
-  printf "$size" | grep --extended-regexp '^[0-9]+$' &>/dev/null
+  printf "$size" | grep --extended-regexp --silent '^[0-9]+$'
   if [ $? -eq 0 ]; then
     say "$size"
     return 0
@@ -163,7 +163,7 @@ scale_size() {
       return 1
       ;;
   esac
-  printf "$size" | grep --extended-regexp '^[0-9]+$' &>/dev/null
+  printf "$size" | grep --extended-regexp --silent '^[0-9]+$'
   if [ $? -ne 0 ]; then
     say 'Size option is out of range'
     return 1
