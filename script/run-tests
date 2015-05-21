@@ -13,10 +13,10 @@ run_tests() {
     local file_count=$(($file_count+1))
 
     # Run tests, which exit upon a failed assertion.
-    source "$file" >/dev/null
+    "$file" >/dev/null
 
     # Run tests again to capture their output for computing statistics.
-    local result=$($file 2>/dev/null)
+    local result=$("$file" 2>/dev/null)
 
     if [ "$result" == '' ]; then
       local lines=0
