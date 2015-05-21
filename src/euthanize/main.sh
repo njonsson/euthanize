@@ -57,17 +57,7 @@ main() {
   say_verbose 'Parsed options successfully.'
 
   say_verbose 'Computing actual size.'
-
-  # Using `local` always sets `$?` to 0, so work around that.
-  _actual_size=$(($(compute_size "$path")))
-  local status=$?
-  local actual_size="$_actual_size"
-  unset _actual_size
-
-  if [ $status -ne 0 ]; then
-    fail "Failed to compute the size of \`$path'."
-  fi
-
+  local actual_size=$(($(compute_size "$path")))
   say_verbose "Actual size is $actual_size bytes."
 
   if [ "$actual_size" -le "$size" ]; then
