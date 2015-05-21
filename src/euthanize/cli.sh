@@ -30,12 +30,15 @@ parse_options() {
       '--size' | '-s')
         local set_size=true
         ;;
+      '--verbose' | '-V')
+        verbose=true
+        ;;
       '--version' | '-v')
         say $VERSION
         exit
         ;;
-      '')
-        complain_about_invalid_arguments
+      -*)
+        complain_about_invalid_arguments "Option is not supported: \`$argument'."
         ;;
       *)
         if [ "$path" == '' ]; then
@@ -66,6 +69,7 @@ safely_multiply() {
     if [ "$reverted" == "$result" ]; then
       local result="$product"
     else
+      say_verbose "Multiplying $result by $argument resulted in overflow."
       say 'Overflow'
       return 1
     fi
@@ -209,6 +213,8 @@ validate_path() {
       complain_about_invalid_arguments 'Path argument must be an existing directory or file.'
     fi
   fi
+
+  say_verbose "Path is \`$path'."
 }
 
 validate_size() {
@@ -223,4 +229,6 @@ validate_size() {
   fi
 
   size=$result
+
+  say_verbose "Size is $size bytes."
 }

@@ -64,6 +64,11 @@ euthanize  -s    SIZE PATH
   assert_output_equal "\033[31mSize option is out of range.\033[0m" "$command >/dev/null"
   assert_exit_status_equal 1 "$command"
 
+  local command='./euthanize --size 123mb tmp --nonexistent-option'
+  assert_output_equal "$USAGE"                                                           "$command 2>/dev/null"
+  assert_output_equal "\033[31mOption is not supported: \`--nonexistent-option'.\033[0m" "$command >/dev/null"
+  assert_exit_status_equal 1 "$command"
+
   local command='./euthanize --size 123mb tmp foo'
   assert_output_equal "$USAGE"                                                    "$command 2>/dev/null"
   assert_output_equal "\033[31mMore than one path argument was specified.\033[0m" "$command >/dev/null"

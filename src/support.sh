@@ -191,3 +191,29 @@ say() {
     printf "$argument$terminator"
   done
 }
+
+# Display one or more messages unless $verbose is falsy
+#
+# Arguments:
+#
+# 1. no_newline -- if '-n' then no trailing line feed is displayed after each of
+#                  the supplied messages; optional
+# 2...n. messages -- message(s) to be displayed
+#
+# Outputs:
+#
+# * stderr: the supplied message(s)
+#
+# Returns:
+#
+# * 1 if $verbose is falsy
+say_verbose() {
+  case "$verbose" in
+    '' | 0 | false)
+      return 1
+      ;;
+    *)
+      say "$@" >&2
+      ;;
+  esac
+}

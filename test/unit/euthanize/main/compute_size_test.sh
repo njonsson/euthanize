@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 source src/euthanize/main.sh
+source src/support.sh
 source test/helper.sh
 
 compute_size_test() {

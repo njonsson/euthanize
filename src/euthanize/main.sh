@@ -4,13 +4,15 @@ compute_size() {
   local path="$1"
   case "`uname`" in
     Darwin)
+      say_verbose 'Detected Darwin platform.'
       local stat_cmd='stat -f %z'
       ;;
     Linux)
+      say_verbose 'Detected Linux platform.'
       local stat_cmd="stat --format '%s'"
       ;;
     *)
-      fail "`uname` is not supported"
+      fail "`uname` is not supported."
       ;;
   esac
   find "$path" -type f -exec $stat_cmd "{}" \; 2>/dev/null | paste -sd+ - | bc
@@ -19,15 +21,17 @@ compute_size() {
 delete_least_recently_accessed_file_from() {
   case "`uname`" in
     Darwin)
+      say_verbose 'Detected Darwin platform.'
       local stat_cmd='stat -f %a%t%N'
       local cut_cmd='cut -f2-'
       ;;
     Linux)
+      say_verbose 'Detected Linux platform.'
       local stat_cmd="stat --format '%X %n'"
       local cut_cmd="cut -d ' ' -f2-"
       ;;
     *)
-      fail "`uname` is not supported"
+      fail "`uname` is not supported."
       ;;
   esac
 
@@ -38,7 +42,7 @@ delete_least_recently_accessed_file_from() {
   unset _filename
 
   if [ $status -ne 0 ]; then
-    fail 'Failed to find files'
+    fail 'Failed to find files.'
   fi
 
   say "Removing $(format underlined "$filename") (NOT REALLY)"
@@ -50,6 +54,9 @@ main() {
   set -o pipefail
 
   parse_options "$@"
+  say_verbose 'Parsed options successfully.'
+
+  say_verbose 'Computing actual size.'
 
   # Using `local` always sets `$?` to 0, so work around that.
   _actual_size=$(($(compute_size "$path")))
@@ -58,11 +65,13 @@ main() {
   unset _actual_size
 
   if [ $status -ne 0 ]; then
-    say "Failed to compute the size of \`$path'."
-    exit 1
+    fail "Failed to compute the size of \`$path'."
   fi
 
+  say_verbose "Actual size is $actual_size bytes."
+
   if [ "$actual_size" -le "$size" ]; then
+    say_verbose "Actual size is less than size."
     say 'Nothing to do.'
     exit 0
   fi
