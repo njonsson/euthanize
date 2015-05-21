@@ -9,7 +9,7 @@ compute_size() {
       ;;
     Linux)
       say_verbose 'Detected Linux platform.'
-      local stat_cmd="stat --format '%s'"
+      local stat_cmd="stat --format %s"
       ;;
     *)
       fail "`uname` is not supported."
