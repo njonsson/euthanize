@@ -21,13 +21,23 @@ tests in order to determine whether your operating system is supported.
 
 Supply a `--help` or `-h` option in order to display help.
 
-    $ euthanize
-    Delete least-recently-used files in a directory.
+    $ euthanize --help
+    Deletes least-recently-used files in a directory.
 
     Usage:
 
-    euthanize --size SIZE PATH
-    euthanize  -s    SIZE PATH
+    euthanize --version
+    euthanize  -v
+
+      Displays the current version of euthanize.
+
+    euthanize --help
+    euthanize  -h
+
+      Displays this help message.
+
+    euthanize [--verbose] --size SIZE PATH
+    euthanize  [-V]        -s    SIZE PATH
 
       Deletes files in PATH only if PATH is estimated to exceed SIZE, which is
       interpreted as a number of bytes. If SIZE includes a scale indicator, then
@@ -51,7 +61,7 @@ Supply a `--help` or `-h` option in order to display help.
         zib  zebibytes (1024 exbibytes)
         yib  yobibytes (1024 zebibytes)
 
-      PATH must be a directory, a symbolic link, or a regular file.
+      PATH must be an existing directory or regular file.
 
 Trim a directory _foo_ down to 1 MB in size.
 

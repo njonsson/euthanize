@@ -218,8 +218,18 @@ scale_size() {
 show_usage() {
   say 'Usage:'
   say ''
-  say "`basename "$0"` --size SIZE PATH"
-  say "`basename "$0"`  -s    SIZE PATH"
+  say "`basename "$0"` --version"
+  say "`basename "$0"`  -v"
+  say ''
+  say "  Displays the current version of `basename "$0"`."
+  say ''
+  say "`basename "$0"` --help"
+  say "`basename "$0"`  -h"
+  say ''
+  say '  Displays this help message.'
+  say ''
+  say "`basename "$0"` [--verbose] --size SIZE PATH"
+  say "`basename "$0"`  [-V]        -s    SIZE PATH"
   say ''
   say '  Deletes files in PATH only if PATH is estimated to exceed SIZE, which is'
   say '  interpreted as a number of bytes. If SIZE includes a scale indicator, then it'

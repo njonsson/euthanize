@@ -7,8 +7,18 @@ help_test() {
 
 Usage:
 
-euthanize --size SIZE PATH
-euthanize  -s    SIZE PATH
+euthanize --version
+euthanize  -v
+
+  Displays the current version of euthanize.
+
+euthanize --help
+euthanize  -h
+
+  Displays this help message.
+
+euthanize [--verbose] --size SIZE PATH
+euthanize  [-V]        -s    SIZE PATH
 
   Deletes files in PATH only if PATH is estimated to exceed SIZE, which is
   interpreted as a number of bytes. If SIZE includes a scale indicator, then it
