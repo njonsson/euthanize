@@ -11,6 +11,23 @@ complain_about_invalid_arguments() {
   exit 1
 }
 
+handle_option_help() {
+  say 'Deletes least-recently-used files in a directory.'
+  say ''
+  show_usage
+  exit
+}
+
+handle_option_verbose() {
+  verbose=true
+  say_verbose 'Verbose output is enabled.'
+}
+
+handle_option_version() {
+  say $VERSION
+  exit
+}
+
 parse_options() {
   local set_size=false
   for argument in "$@"; do
@@ -21,24 +38,49 @@ parse_options() {
     fi
 
     case "$argument" in
-      '--help' | '-h')
-        say 'Deletes least-recently-used files in a directory.'
-        say ''
-        show_usage
-        exit
-        ;;
-      '--size' | '-s')
-        local set_size=true
-        ;;
-      '--verbose' | '-V')
-        verbose=true
-        ;;
-      '--version' | '-v')
-        say $VERSION
-        exit
+      --*)
+        case "$argument" in
+          --help)
+            handle_option_help
+            ;;
+          --size)
+            local set_size=true
+            ;;
+          --verbose)
+            handle_option_verbose
+            ;;
+          --version)
+            handle_option_version
+            ;;
+          *)
+            complain_about_invalid_arguments "Option is not supported: \`$argument'."
+            ;;
+        esac
         ;;
       -*)
-        complain_about_invalid_arguments "Option is not supported: \`$argument'."
+        local options="$(printf "\\$argument" | sed -e 's/\(.\)/\1 /g')"
+        for character in $options; do
+          case "$character" in
+            V)
+              handle_option_verbose
+              ;;
+            h)
+              handle_option_help
+              ;;
+            s)
+              local set_size=true
+              ;;
+            v)
+              handle_option_version
+              ;;
+            - | \\)
+              ;;
+            *)
+              echo 'NOT SUPPORTED'
+              complain_about_invalid_arguments "Option is not supported: \`$argument'."
+              ;;
+          esac
+        done
         ;;
       *)
         if [ "$path" == '' ]; then
