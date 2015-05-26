@@ -5,30 +5,30 @@ compute_size() {
   case "`uname`" in
     Darwin)
       say_verbose 'Detected Darwin platform.'
-      local stat_cmd='stat -f %z'
+      local stat_args='-f %z'
       ;;
     Linux)
       say_verbose 'Detected Linux platform.'
-      local stat_cmd="stat --format %s"
+      local stat_args="--format %s"
       ;;
     *)
       fail "`uname` is not supported."
       ;;
   esac
-  find "$path" -type f -exec $stat_cmd "{}" \; 2>/dev/null | paste -sd+ - | bc
+  find "$path" -type f -exec stat $stat_args "{}" \; 2>/dev/null | paste -sd+ - | bc
 }
 
 delete_least_recently_accessed_file_from() {
   case "`uname`" in
     Darwin)
       say_verbose 'Detected Darwin platform.'
-      local stat_cmd='stat -f %a%t%N'
-      local cut_cmd='cut -f2-'
+      local stat_args='-f %a%t%N'
+      local cut_args='-f2-'
       ;;
     Linux)
       say_verbose 'Detected Linux platform.'
-      local stat_cmd="stat --format '%X %n'"
-      local cut_cmd="cut -d ' ' -f2-"
+      local stat_args="--format '%X %n'"
+      local cut_args="-d ' ' -f2-"
       ;;
     *)
       fail "`uname` is not supported."
@@ -36,7 +36,7 @@ delete_least_recently_accessed_file_from() {
   esac
 
   # Using `local` always sets `$?` to 0, so work around that.
-  _filename=$(find "$1" -type f -exec $stat_cmd "{}" \; | sort -n | head -1 | $cut_cmd)
+  _filename=$(find "$1" -type f -exec stat $stat_args "{}" \; | sort -n | head -1 | cut $cut_args)
   local status=$?
   local filename="$_filename"
   unset _filename
