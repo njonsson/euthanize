@@ -6,7 +6,8 @@ complain_about_invalid_arguments() {
     local reason='One ore more arguments are invalid.'
   fi
   local reason=$(format foreground_red "$reason")
-  say "$reason\n" >&2
+  say "$reason" >&2
+  say ''
   show_usage
   exit 1
 }
