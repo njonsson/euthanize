@@ -58,7 +58,7 @@ main() {
 
   say_verbose 'Computing actual size.'
   local actual_size=$(($(compute_size "$path")))
-  say_verbose "Actual size is $actual_size bytes."
+  say_verbose "Actual size is $actual_size byte(s)."
 
   if [ "$actual_size" -le "$size" ]; then
     say_verbose "Actual size is less than size."

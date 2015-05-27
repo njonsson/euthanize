@@ -283,5 +283,5 @@ validate_size() {
 
   size=$result
 
-  say_verbose "Size is $size bytes."
+  say_verbose "Size is $size byte(s)."
 }
