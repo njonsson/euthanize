@@ -3,6 +3,22 @@
 source test/helper.sh
 
 nothing_to_do_test() {
+  content_of_size 0 >0.txt
+  assert_file_exists '0.txt'
+  local command='./euthanize --size 0 0.txt'
+  assert_output_equal 'Nothing to do.' "$command"
+  assert_exit_status_equal 0 "$command"
+  assert_file_exists '0.txt'
+  rm 0.txt
+
+  content_of_size 4 >4.txt
+  assert_file_exists '4.txt'
+  local command='./euthanize --size 8 4.txt'
+  assert_output_equal 'Nothing to do.' "$command"
+  assert_exit_status_equal 0 "$command"
+  assert_file_exists '4.txt'
+  rm 4.txt
+
   rm -fr tmp
   mkdir tmp
 
