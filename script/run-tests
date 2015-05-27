@@ -13,7 +13,7 @@ run_tests() {
     local file_count=$(($file_count+1))
 
     # Run tests, which exit upon a failed assertion.
-    "$file" >/dev/null
+    source "$file" >/dev/null
 
     # Run tests again to capture their output for computing statistics.
     local result=$("$file" 2>/dev/null)
