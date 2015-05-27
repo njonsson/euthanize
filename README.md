@@ -2,10 +2,10 @@
 
 Some memory caching systems, such as [_memcached_][memcached], employ a
 Least-Recently Used (LRU) algorithm for sweeping the cache. That is to say, when
-the overall size of the cache is at its limit, the items that have been accessed
-the longest time ago are removed from the cache in order to make room for new
-items. _euthanize_ is an implementation of LRU for **filesystem-based** caching
-systems.
+the overall size of the cache is above its limit, the items that have been
+accessed the longest time ago are removed from the cache in order to make room
+for new items. _euthanize_ is an implementation of LRU for **filesystem-based**
+caching systems.
 
 Aside from caching systems, you may also find _euthanize_ useful for keeping
 noncritical data (such as personal download folders) to a manageable size.
