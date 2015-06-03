@@ -32,14 +32,9 @@ handle_option_version() {
 parse_options() {
   local set_size=false
   for argument in "$@"; do
-    if [ $set_size == true ]; then
-      size="$argument"
-      local set_size=false
-      continue
-    fi
-
     case "$argument" in
       --*)
+        local set_size=false
         case "$argument" in
           --help)
             handle_option_help
@@ -59,6 +54,7 @@ parse_options() {
         esac
         ;;
       -*)
+        local set_size=false
         local options="$(printf "\\$argument" | sed -e 's/\(.\)/\1 /g')"
         for character in $options; do
           case "$character" in
@@ -84,6 +80,12 @@ parse_options() {
         done
         ;;
       *)
+        if [ $set_size == true ]; then
+          size="$argument"
+          local set_size=false
+          continue
+        fi
+
         if [ "$path" == '' ]; then
           path="$argument"
         else
