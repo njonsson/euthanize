@@ -201,6 +201,25 @@ deny_exit_status_equal() {
   deny_equal "$expected" "$?" "$message"
 }
 
+deny_file_exists() {
+  if [ $# -lt 1 ]; then
+    printf "\033[31m$# for 1-2 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"
+    exit -1
+  fi
+
+  local path="$1"
+  local message="$2"
+  if [ "$message" == '' ]; then
+    message="file \`$path' exists"
+  fi
+  printf "$path does not exist ... "
+  if [ -f "$path" ]; then
+    fail "$message"
+  else
+    pass
+  fi
+}
+
 deny_output_equal() {
   if [ $# -lt 2 ]; then
     printf "\033[31m$# for 2-3 arguments supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}\033[0m\n"

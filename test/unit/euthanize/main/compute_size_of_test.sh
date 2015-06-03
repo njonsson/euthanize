@@ -4,11 +4,11 @@ source src/euthanize/main.sh
 source src/support.sh
 source test/helper.sh
 
-compute_size_test() {
+compute_size_of_test() {
   rm -fr tmp
   mkdir tmp
 
-  local expression='compute_size tmp'
+  local expression='compute_size_of tmp'
 
   content_of_size 0 >tmp/0.txt
   assert_output_equal 0 "$expression"
@@ -29,4 +29,4 @@ compute_size_test() {
 
   rm -fr tmp
 }
-compute_size_test
+compute_size_of_test
