@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+run_load_test() {
+  rm -fr tmp
+  mkdir tmp
+
+  NUMBER_OF_FILES=$(($NUMBER_OF_FILES))
+  if [ $NUMBER_OF_FILES -lt 1 ]; then
+    NUMBER_OF_FILES=10000
+  fi
+
+  printf "Generating $NUMBER_OF_FILES files of test data ... "
+  local number_of_files_left=$NUMBER_OF_FILES
+  while [ $number_of_files_left -gt 0 ]; do
+    printf a >tmp/$number_of_files_left.txt
+    number_of_files_left=$(($number_of_files_left-1))
+  done
+  printf "done.\n"
+
+  local started_at=$(($(date '+%s')))
+  printf "Running load test.\n"
+  ./euthanize --size $(($NUMBER_OF_FILES/4)) $@ tmp
+  local duration=$(($(date '+%s')-$started_at))
+  printf "Completed in approximately $duration seconds.\n"
+
+  rm -fr tmp
+}
+run_load_test "$@"

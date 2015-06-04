@@ -24,6 +24,15 @@ $(TEST_RUN): $(ALL_TEST_DEPENDENCIES)
 	exit 1
 
 
+# Load test
+
+load-test:
+	script/run-load-test
+
+load-test-verbose:
+	script/run-load-test --verbose
+
+
 # Install
 
 install: $(MAKEFILE) test $(OUT)
