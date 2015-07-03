@@ -78,17 +78,19 @@ last_access_time_of() {
     Darwin)
       say_verbose 'Detected Darwin platform.'
       local stat_args='-f %a'
+      local date_args='-j -f %s'
       ;;
     Linux)
       say_verbose 'Detected Linux platform.'
-      local stat_args='--format %X'
+      local stat_args='--format %x'
+      local date_args='--date'
       ;;
     *)
       fail "`uname` is not supported."
       ;;
   esac
 
-  date -j -f %s "$(stat $stat_args "$path")"
+  date $date_args "$(stat $stat_args "$path")"
 }
 
 lru_file() {
@@ -106,7 +108,7 @@ lru_file() {
       ;;
     Linux)
       say_verbose 'Detected Linux platform.'
-      local stat_args='--printf "%X\t%n"'
+      local stat_args='--printf %X\\t%n\\n'
       ;;
     *)
       fail "`uname` is not supported."
