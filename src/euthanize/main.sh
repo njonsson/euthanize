@@ -1,5 +1,28 @@
 # Principal functions of the program.
 
+THRESHOLD_FOR_COMPUTING_SIZES=65536
+
+compute_or_estimate_size_of() {
+  if [ $# -ne 1 ]; then
+    local message="$# for 1 argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}"
+    local formatted_message=$(format foreground_red "$message")
+    say "$formatted_message" >&2
+    exit -1
+  fi
+
+  local path="$1"
+  say_verbose "Estimating size of \`$path'."
+  local size=$(($(estimate_size_of "$path")))
+  say_verbose "Size of \`$path' is estimated to be $size byte(s)."
+  if [ "$size" -lt $THRESHOLD_FOR_COMPUTING_SIZES ]; then
+    say_verbose "Estimated size is less than threshold for computing sizes of $THRESHOLD_FOR_COMPUTING_SIZES."
+    say_verbose "Computing size of \`$path'."
+    local size=$(($(compute_size_of "$path")))
+    say_verbose "Size of \`$path' is exactly $size byte(s)."
+  fi
+  printf $size
+}
+
 compute_size_of() {
   if [ $# -ne 1 ]; then
     local message="$# for 1 argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}"
@@ -23,6 +46,23 @@ compute_size_of() {
       ;;
   esac
   find "$path" -type f -exec stat $stat_args "{}" \; 2>/dev/null | paste -sd+ - | bc
+}
+
+estimate_size_of() {
+  if [ $# -ne 1 ]; then
+    local message="$# for 1 argument supplied to ${FUNCNAME}() at ${BASH_SOURCE[1]}:${BASH_LINENO[0]} -> ${BASH_SOURCE[2]}:${BASH_LINENO[1]}"
+    local formatted_message=$(format foreground_red "$message")
+    say "$formatted_message" >&2
+    exit -1
+  fi
+
+  local path="$1"
+  if [ -e "$path" ]; then
+    local size=$(du -s "$path" | cut -f1)
+    printf $((size*512))
+  else
+    printf 0
+  fi
 }
 
 last_access_time_of() {
@@ -84,8 +124,8 @@ main() {
   say_verbose 'Parsed options successfully.'
 
   while true; do
-    say_verbose 'Computing actual size.'
-    local actual_size=$(($(compute_size_of "$path")))
+    say_verbose 'Determining actual size.'
+    local actual_size=$(compute_or_estimate_size_of "$path")
     say_verbose "Actual size is $actual_size byte(s)."
 
     if [ "$actual_size" -le "$size" ]; then
@@ -98,6 +138,7 @@ main() {
 
     say_verbose 'Finding least-recently-accessed file.'
     local lru_file="$(lru_file)"
+    say_verbose "Found \`$lru_file'."
 
     say_verbose 'Obtaining size of least-recently-accessed file.'
     if [ $? -eq 0 ]; then
