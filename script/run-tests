@@ -29,7 +29,7 @@ run_tests() {
   printf "* Approximately $assertion_count passing assertions\n"
   printf "* In $file_count test files\n"
   printf "* Completed $(date '+%a') "
-  printf $(($(date '+%m')))
+  printf $((10#$(date '+%m')))
   printf $(date '+/%d')
   printf ' '
   printf $(date '+%l:%M:%S')
